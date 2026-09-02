@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cálculo de Transpose</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <script>
         tailwind.config = {
             theme: {
@@ -17,8 +20,10 @@
                         brand: {
                             50: '#f0fdfa',
                             100: '#ccfbf1',
+                            200: '#99f6e4',
                             500: '#14b8a6',
                             600: '#0d9488',
+                            700: '#0f766e',
                             900: '#134e4a',
                         }
                     }
@@ -26,6 +31,7 @@
             }
         }
     </script>
+
     <style>
         body {
             background-color: #f8fafc;
@@ -33,6 +39,7 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
+
         select {
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -42,320 +49,994 @@
             background-position: right 1rem center;
             background-size: 1em;
         }
-        /* Custom scrollbar for better appearance */
+
         ::-webkit-scrollbar {
             width: 8px;
         }
+
         ::-webkit-scrollbar-track {
-            background: #f1f5f9; 
+            background: #f1f5f9;
         }
+
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1; 
+            background: #cbd5e1;
             border-radius: 4px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8; 
+            background: #94a3b8;
         }
     </style>
 </head>
+
 <body class="min-h-screen flex items-center justify-center p-4">
+
     <div class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
-        
+
         <!-- Header -->
         <div class="bg-brand-600 text-white p-6 text-center">
-            <h1 class="text-2xl font-bold tracking-tight">Cálculo de Transpose</h1>
-            <p class="text-brand-100 mt-1 text-sm">Rápido e simples para músicos</p>
+            <h1 class="text-2xl font-bold tracking-tight">
+                Cálculo de Transpose
+            </h1>
+
+            <p class="text-brand-100 mt-1 text-sm">
+                Rápido e simples para músicos
+            </p>
         </div>
 
-        <!-- Main Content Area -->
+        <!-- Main Content -->
         <div class="p-6 space-y-8">
-            
-            <!-- Selectors Section -->
+
+            <!-- Selectors -->
             <div class="flex flex-col sm:flex-row gap-4 items-end relative">
-                
+
+                <!-- Tom da Banda -->
                 <div class="flex-1 w-full">
-                    <label for="bandKey" class="block text-sm font-semibold text-slate-600 mb-2">Tom da Banda</label>
-                    <select id="bandKey" class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all font-medium text-lg">
-                        <!-- Options will be populated by JS -->
+
+                    <label
+                        for="bandKey"
+                        class="block text-sm font-semibold text-slate-600 mb-2"
+                    >
+                        Tom da Banda
+                    </label>
+
+                    <select
+                        id="bandKey"
+                        class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all font-medium text-lg"
+                    >
+                        <option value="" disabled selected>
+                            Selecione
+                        </option>
                     </select>
+
                 </div>
 
-                <!-- Swap Button (Inverter) -->
-                <button id="swapBtn" class="flex-none bg-slate-100 hover:bg-slate-200 text-slate-600 p-3 rounded-full transition-colors self-center sm:self-end sm:mb-1 group" title="Inverter tons" aria-label="Inverter tons">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transform transition-transform group-hover:rotate-180">
+                <!-- Swap Button -->
+                <button
+                    id="swapBtn"
+                    class="flex-none bg-slate-100 hover:bg-slate-200 text-slate-600 p-3 rounded-full transition-colors self-center sm:self-end sm:mb-1 group"
+                    title="Inverter tons"
+                    aria-label="Inverter tons"
+                >
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="transform transition-transform group-hover:rotate-180"
+                    >
                         <polyline points="16 3 21 3 21 8"></polyline>
                         <line x1="4" y1="20" x2="21" y2="3"></line>
                         <polyline points="21 16 21 21 16 21"></polyline>
                         <line x1="15" y1="15" x2="21" y2="21"></line>
                         <line x1="4" y1="4" x2="9" y2="9"></line>
                     </svg>
+
                 </button>
 
+                <!-- Vou tocar em -->
                 <div class="flex-1 w-full">
-                    <label for="playKey" class="block text-sm font-semibold text-slate-600 mb-2">Vou tocar em</label>
-                    <select id="playKey" class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all font-medium text-lg">
-                        <!-- Options will be populated by JS -->
+
+                    <label
+                        for="playKey"
+                        class="block text-sm font-semibold text-slate-600 mb-2"
+                    >
+                        Vou tocar em
+                    </label>
+
+                    <select
+                        id="playKey"
+                        class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all font-medium text-lg"
+                    >
+                        <option value="" disabled selected>
+                            Selecione
+                        </option>
                     </select>
+
                 </div>
+
             </div>
 
             <!-- Result Card -->
-            <div id="resultCard" class="bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 p-8 text-center transition-all duration-300 transform scale-100">
-                <p class="text-sm font-bold text-slate-400 tracking-widest uppercase mb-2">Transpose</p>
-                <div id="transposeValue" class="text-6xl font-black text-slate-800 tracking-tighter tabular-nums">-</div>
-                <p id="instructionText" class="mt-4 text-slate-500 font-medium text-sm hidden">
-                    No teclado coloque o transpose em <span id="instructionValue" class="font-bold text-slate-700"></span>.
+            <div
+                id="resultCard"
+                class="bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 p-8 text-center transition-all duration-300 transform scale-100"
+            >
+
+                <p class="text-sm font-bold text-slate-400 tracking-widest uppercase mb-2">
+                    Transpose
                 </p>
+
+                <div
+                    id="transposeValue"
+                    class="text-6xl font-black text-slate-800 tracking-tighter tabular-nums"
+                >
+                    -
+                </div>
+
+                <p
+                    id="instructionText"
+                    class="mt-4 text-slate-500 font-medium text-sm hidden"
+                >
+                    No teclado coloque o transpose em
+                    <span
+                        id="instructionValue"
+                        class="font-bold text-slate-700"
+                    ></span>.
+                </p>
+
             </div>
 
             <!-- Action Buttons -->
             <div class="flex gap-3">
-                <button id="clearBtn" class="flex-1 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+
+                <button
+                    id="clearBtn"
+                    class="flex-1 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2"
+                >
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                    </svg>
+
                     Limpar
+
                 </button>
-                <button id="copyBtn" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                    <span id="copyText">Copiar resultado</span>
+
+                <button
+                    id="copyBtn"
+                    disabled
+                    class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <rect
+                            x="9"
+                            y="9"
+                            width="13"
+                            height="13"
+                            rx="2"
+                        ></rect>
+
+                        <path
+                            d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                        ></path>
+                    </svg>
+
+                    <span id="copyText">
+                        Copiar resultado
+                    </span>
+
                 </button>
+
             </div>
-            
-            <!-- Toast Notification -->
-            <div id="toast" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-lg shadow-lg text-sm font-medium transition-opacity duration-300 opacity-0 pointer-events-none">
+
+            <!-- Toast -->
+            <div
+                id="toast"
+                class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-lg shadow-lg text-sm font-medium transition-opacity duration-300 opacity-0 pointer-events-none"
+            >
                 Copiado com sucesso!
             </div>
+
         </div>
+
     </div>
 
+
     <script>
-        // Data Structure
-        const notes = [
-            { id: 0, labels: ['C'] },
-            { id: 1, labels: ['C#', 'Db'] },
-            { id: 2, labels: ['D'] },
-            { id: 3, labels: ['D#', 'Eb'] },
-            { id: 4, labels: ['E'] },
-            { id: 5, labels: ['F'] },
-            { id: 6, labels: ['F#', 'Gb'] },
-            { id: 7, labels: ['G'] },
-            { id: 8, labels: ['G#', 'Ab'] },
-            { id: 9, labels: ['A'] },
-            { id: 10, labels: ['A#', 'Bb'] },
-            { id: 11, labels: ['B'] }
+
+        /*
+        ============================================================
+        TONS MUSICAIS
+        ============================================================
+
+        O ID representa a posição da tônica no sistema cromático:
+
+        C  = 0
+        C# = 1
+        D  = 2
+        Eb = 3
+        E  = 4
+        F  = 5
+        F# = 6
+        G  = 7
+        Ab = 8
+        A  = 9
+        Bb = 10
+        B  = 11
+
+        O modo (Maior/Menor) NÃO altera o ID.
+
+        Portanto:
+
+        B  = 11
+        Bm = 11
+
+        G  = 7
+        Gm = 7
+
+        B → G
+        11 - 7 = +4
+
+        Bm → Gm
+        11 - 7 = +4
+
+        B → Gm
+        11 - 7 = +4
+
+        Bm → G
+        11 - 7 = +4
+
+        Isso é matematicamente correto para transpose.
+        ============================================================
+        */
+
+        const keys = [
+
+            // C
+            {
+                id: 0,
+                label: 'C',
+                mode: 'Maior'
+            },
+            {
+                id: 0,
+                label: 'Cm',
+                mode: 'Menor'
+            },
+
+            // C# / Db
+            {
+                id: 1,
+                label: 'C# / Db',
+                mode: 'Maior'
+            },
+            {
+                id: 1,
+                label: 'C#m / Dbm',
+                mode: 'Menor'
+            },
+
+            // D
+            {
+                id: 2,
+                label: 'D',
+                mode: 'Maior'
+            },
+            {
+                id: 2,
+                label: 'Dm',
+                mode: 'Menor'
+            },
+
+            // D# / Eb
+            {
+                id: 3,
+                label: 'D# / Eb',
+                mode: 'Maior'
+            },
+            {
+                id: 3,
+                label: 'D#m / Ebm',
+                mode: 'Menor'
+            },
+
+            // E
+            {
+                id: 4,
+                label: 'E',
+                mode: 'Maior'
+            },
+            {
+                id: 4,
+                label: 'Em',
+                mode: 'Menor'
+            },
+
+            // F
+            {
+                id: 5,
+                label: 'F',
+                mode: 'Maior'
+            },
+            {
+                id: 5,
+                label: 'Fm',
+                mode: 'Menor'
+            },
+
+            // F# / Gb
+            {
+                id: 6,
+                label: 'F# / Gb',
+                mode: 'Maior'
+            },
+            {
+                id: 6,
+                label: 'F#m / Gbm',
+                mode: 'Menor'
+            },
+
+            // G
+            {
+                id: 7,
+                label: 'G',
+                mode: 'Maior'
+            },
+            {
+                id: 7,
+                label: 'Gm',
+                mode: 'Menor'
+            },
+
+            // G# / Ab
+            {
+                id: 8,
+                label: 'G# / Ab',
+                mode: 'Maior'
+            },
+            {
+                id: 8,
+                label: 'G#m / Abm',
+                mode: 'Menor'
+            },
+
+            // A
+            {
+                id: 9,
+                label: 'A',
+                mode: 'Maior'
+            },
+            {
+                id: 9,
+                label: 'Am',
+                mode: 'Menor'
+            },
+
+            // A# / Bb
+            {
+                id: 10,
+                label: 'A# / Bb',
+                mode: 'Maior'
+            },
+            {
+                id: 10,
+                label: 'A#m / Bbm',
+                mode: 'Menor'
+            },
+
+            // B
+            {
+                id: 11,
+                label: 'B',
+                mode: 'Maior'
+            },
+            {
+                id: 11,
+                label: 'Bm',
+                mode: 'Menor'
+            }
+
         ];
 
-        // DOM Elements
-        const bandKeySelect = document.getElementById('bandKey');
-        const playKeySelect = document.getElementById('playKey');
-        const transposeValueEl = document.getElementById('transposeValue');
-        const instructionTextEl = document.getElementById('instructionText');
-        const instructionValueEl = document.getElementById('instructionValue');
-        const resultCard = document.getElementById('resultCard');
-        
-        const swapBtn = document.getElementById('swapBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const copyBtn = document.getElementById('copyBtn');
-        const copyTextEl = document.getElementById('copyText');
-        const toast = document.getElementById('toast');
 
-        // State
+        // ============================================================
+        // ELEMENTOS
+        // ============================================================
+
+        const bandKeySelect =
+            document.getElementById('bandKey');
+
+        const playKeySelect =
+            document.getElementById('playKey');
+
+        const transposeValueEl =
+            document.getElementById('transposeValue');
+
+        const instructionTextEl =
+            document.getElementById('instructionText');
+
+        const instructionValueEl =
+            document.getElementById('instructionValue');
+
+        const resultCard =
+            document.getElementById('resultCard');
+
+        const swapBtn =
+            document.getElementById('swapBtn');
+
+        const clearBtn =
+            document.getElementById('clearBtn');
+
+        const copyBtn =
+            document.getElementById('copyBtn');
+
+        const toast =
+            document.getElementById('toast');
+
+
+        // ============================================================
+        // ESTADO
+        // ============================================================
+
         let currentResult = null;
 
-        function init() {
-            populateSelects();
-            
-            // Event Listeners
-            bandKeySelect.addEventListener('change', calculateTranspose);
-            playKeySelect.addEventListener('change', calculateTranspose);
-            swapBtn.addEventListener('click', swapKeys);
-            clearBtn.addEventListener('click', clearForm);
-            copyBtn.addEventListener('click', copyResult);
 
-            // Set initial state (empty)
+        // ============================================================
+        // INICIALIZAÇÃO
+        // ============================================================
+
+        function init() {
+
+            populateSelects();
+
+            bandKeySelect.addEventListener(
+                'change',
+                calculateTranspose
+            );
+
+            playKeySelect.addEventListener(
+                'change',
+                calculateTranspose
+            );
+
+            swapBtn.addEventListener(
+                'click',
+                swapKeys
+            );
+
+            clearBtn.addEventListener(
+                'click',
+                clearForm
+            );
+
+            copyBtn.addEventListener(
+                'click',
+                copyResult
+            );
+
             clearForm();
         }
 
+
+        // ============================================================
+        // PREENCHER SELECTS
+        // ============================================================
+
         function populateSelects() {
-            let optionsHTML = '<option value="" disabled selected>Selecione</option>';
-            
-            notes.forEach(note => {
-                // Determine primary label to show in option
-                let displayLabel = note.labels[0];
-                if (note.labels.length > 1) {
-                    displayLabel = `${note.labels[0]} / ${note.labels[1]}`;
-                }
-                
-                // We use the 'id' (0-11) as the value for easy calculation
-                optionsHTML += `<option value="${note.id}">${displayLabel}</option>`;
+
+            let optionsHTML =
+                '<option value="" disabled selected>Selecione</option>';
+
+
+            keys.forEach((key, index) => {
+
+                optionsHTML += `
+                    <option value="${index}">
+                        ${key.label}
+                    </option>
+                `;
+
             });
 
-            bandKeySelect.innerHTML = optionsHTML;
-            playKeySelect.innerHTML = optionsHTML;
+
+            bandKeySelect.innerHTML =
+                optionsHTML;
+
+            playKeySelect.innerHTML =
+                optionsHTML;
         }
 
-        function calculateTranspose() {
-            const bandVal = bandKeySelect.value;
-            const playVal = playKeySelect.value;
 
-            if (bandVal === "" || playVal === "") {
+        // ============================================================
+        // CALCULAR TRANSPOSE
+        // ============================================================
+
+        function calculateTranspose() {
+
+            const bandVal =
+                bandKeySelect.value;
+
+            const playVal =
+                playKeySelect.value;
+
+
+            if (
+                bandVal === "" ||
+                playVal === ""
+            ) {
+
                 resetResultDisplay();
+
                 return;
             }
 
-            const bandId = parseInt(bandVal, 10);
-            const playId = parseInt(playVal, 10);
 
-            // Formula: Transpose = Tom da Banda - Tom que o músico irá tocar
-            let diff = bandId - playId;
+            const bandKey =
+                keys[parseInt(bandVal, 10)];
 
-            // Ensure we handle negative differences correctly in modulo 12
-            // e.g., if diff is -5, it's equivalent to +7.
-            // (diff % 12 + 12) % 12 always returns a positive value between 0 and 11
-            let rawTranspose = (diff % 12 + 12) % 12;
+            const playKey =
+                keys[parseInt(playVal, 10)];
 
-            // Shift to shortest path (-6 to +6)
-            // Examples:
-            // 0 -> 0
-            // 7 -> -5 (7 - 12)
-            // 8 -> -4 (8 - 12)
-            // 11 -> -1 (11 - 12)
-            // 6 -> 6 (remains 6)
-            let optimalTranspose = rawTranspose;
+
+            /*
+            Fórmula:
+
+            Tom da Banda - Tom que vou tocar
+
+            Exemplo:
+
+            Banda = B
+            Vou tocar = G
+
+            B = 11
+            G = 7
+
+            11 - 7 = 4
+
+            Resultado: +4
+            */
+
+            const diff =
+                bandKey.id - playKey.id;
+
+
+            /*
+            Normalização para 0 até 11.
+            */
+
+            const rawTranspose =
+                ((diff % 12) + 12) % 12;
+
+
+            /*
+            Escolhe o menor caminho.
+
+            0  = 0
+            1  = +1
+            2  = +2
+            3  = +3
+            4  = +4
+            5  = +5
+            6  = +6
+            7  = -5
+            8  = -4
+            9  = -3
+            10 = -2
+            11 = -1
+            */
+
+            let optimalTranspose =
+                rawTranspose;
+
+
             if (rawTranspose > 6) {
-                optimalTranspose = rawTranspose - 12;
-            }
-            
-            // Note: -7 becomes +5 naturally with the modulo logic above.
-            // Example: band = 0 (C), play = 7 (G) -> diff = -7
-            // rawTranspose = (-7 % 12 + 12) % 12 = 5
-            // optimalTranspose = 5 (since it's <= 6)
 
-            currentResult = optimalTranspose;
-            displayResult(optimalTranspose);
+                optimalTranspose =
+                    rawTranspose - 12;
+            }
+
+
+            currentResult =
+                optimalTranspose;
+
+
+            displayResult(
+                optimalTranspose
+            );
         }
 
+
+        // ============================================================
+        // EXIBIR RESULTADO
+        // ============================================================
+
         function displayResult(value) {
-            // Format value with sign if positive
-            const displayStr = value > 0 ? `+${value}` : `${value}`;
-            
-            // Animate
-            resultCard.classList.remove('scale-100');
-            resultCard.classList.add('scale-95', 'opacity-80');
-            
+
+            const displayStr =
+                value > 0
+                    ? `+${value}`
+                    : `${value}`;
+
+
+            resultCard.classList.remove(
+                'scale-100'
+            );
+
+            resultCard.classList.add(
+                'scale-95',
+                'opacity-80'
+            );
+
+
             setTimeout(() => {
-                transposeValueEl.textContent = displayStr;
-                
-                // Color coding based on value
-                transposeValueEl.className = 'text-6xl font-black tracking-tighter tabular-nums transition-colors duration-300 ';
+
+                transposeValueEl.textContent =
+                    displayStr;
+
+
+                transposeValueEl.className =
+                    'text-6xl font-black tracking-tighter tabular-nums transition-colors duration-300';
+
+
                 if (value > 0) {
-                    transposeValueEl.classList.add('text-brand-600');
-                    resultCard.className = 'bg-brand-50 rounded-2xl border-2 border-brand-200 p-8 text-center transition-all duration-300 transform scale-100';
-                } else if (value < 0) {
-                    transposeValueEl.classList.add('text-amber-600');
-                    resultCard.className = 'bg-amber-50 rounded-2xl border-2 border-amber-200 p-8 text-center transition-all duration-300 transform scale-100';
-                } else {
-                    transposeValueEl.classList.add('text-slate-800');
-                    resultCard.className = 'bg-slate-50 rounded-2xl border-2 border-slate-300 p-8 text-center transition-all duration-300 transform scale-100';
+
+                    transposeValueEl.classList.add(
+                        'text-brand-600'
+                    );
+
+                    resultCard.className =
+                        'bg-brand-50 rounded-2xl border-2 border-brand-200 p-8 text-center transition-all duration-300 transform scale-100';
+
                 }
 
-                instructionValueEl.textContent = displayStr;
-                instructionTextEl.classList.remove('hidden');
-                
-                copyBtn.disabled = false;
+                else if (value < 0) {
+
+                    transposeValueEl.classList.add(
+                        'text-amber-600'
+                    );
+
+                    resultCard.className =
+                        'bg-amber-50 rounded-2xl border-2 border-amber-200 p-8 text-center transition-all duration-300 transform scale-100';
+
+                }
+
+                else {
+
+                    transposeValueEl.classList.add(
+                        'text-slate-800'
+                    );
+
+                    resultCard.className =
+                        'bg-slate-50 rounded-2xl border-2 border-slate-300 p-8 text-center transition-all duration-300 transform scale-100';
+                }
+
+
+                instructionValueEl.textContent =
+                    displayStr;
+
+
+                instructionTextEl.classList.remove(
+                    'hidden'
+                );
+
+
+                copyBtn.disabled =
+                    false;
+
             }, 150);
         }
 
+
+        // ============================================================
+        // RESETAR RESULTADO
+        // ============================================================
+
         function resetResultDisplay() {
-            currentResult = null;
-            transposeValueEl.textContent = '-';
-            transposeValueEl.className = 'text-6xl font-black text-slate-800 tracking-tighter tabular-nums';
-            instructionTextEl.classList.add('hidden');
-            resultCard.className = 'bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 p-8 text-center transition-all duration-300 transform scale-100';
-            copyBtn.disabled = true;
+
+            currentResult =
+                null;
+
+
+            transposeValueEl.textContent =
+                '-';
+
+
+            transposeValueEl.className =
+                'text-6xl font-black text-slate-800 tracking-tighter tabular-nums';
+
+
+            instructionTextEl.classList.add(
+                'hidden'
+            );
+
+
+            resultCard.className =
+                'bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 p-8 text-center transition-all duration-300 transform scale-100';
+
+
+            copyBtn.disabled =
+                true;
         }
 
+
+        // ============================================================
+        // INVERTER TONS
+        // ============================================================
+
         function swapKeys() {
-            const temp = bandKeySelect.value;
-            bandKeySelect.value = playKeySelect.value;
-            playKeySelect.value = temp;
-            
-            // Add a small rotation animation to the icon
-            const icon = swapBtn.querySelector('svg');
-            icon.style.transform = `rotate(${icon.style.transform === 'rotate(180deg)' ? '0deg' : '180deg'})`;
-            
+
+            const temp =
+                bandKeySelect.value;
+
+
+            bandKeySelect.value =
+                playKeySelect.value;
+
+
+            playKeySelect.value =
+                temp;
+
+
+            const icon =
+                swapBtn.querySelector('svg');
+
+
+            icon.style.transform =
+                icon.style.transform === 'rotate(180deg)'
+                    ? 'rotate(0deg)'
+                    : 'rotate(180deg)';
+
+
             calculateTranspose();
         }
 
+
+        // ============================================================
+        // LIMPAR
+        // ============================================================
+
         function clearForm() {
-            bandKeySelect.value = "";
-            playKeySelect.value = "";
+
+            bandKeySelect.value =
+                "";
+
+            playKeySelect.value =
+                "";
+
+
             resetResultDisplay();
         }
 
+
+        // ============================================================
+        // COPIAR
+        // ============================================================
+
         function copyResult() {
-            if (currentResult === null) return;
-            
-            const displayStr = currentResult > 0 ? `+${currentResult}` : `${currentResult}`;
-            const textToCopy = `Transpose ${displayStr}`;
-            
-            // Try modern clipboard API first
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(textToCopy)
+
+            if (currentResult === null) {
+
+                return;
+            }
+
+
+            const displayStr =
+                currentResult > 0
+                    ? `+${currentResult}`
+                    : `${currentResult}`;
+
+
+            const textToCopy =
+                `Transpose ${displayStr}`;
+
+
+            if (
+                navigator.clipboard &&
+                window.isSecureContext
+            ) {
+
+                navigator.clipboard
+                    .writeText(textToCopy)
                     .then(showToast)
-                    .catch(err => fallbackCopyTextToClipboard(textToCopy));
-            } else {
-                fallbackCopyTextToClipboard(textToCopy);
+                    .catch(() => {
+
+                        fallbackCopyTextToClipboard(
+                            textToCopy
+                        );
+
+                    });
+
+            }
+
+            else {
+
+                fallbackCopyTextToClipboard(
+                    textToCopy
+                );
             }
         }
+
+
+        // ============================================================
+        // FALLBACK COPY
+        // ============================================================
 
         function fallbackCopyTextToClipboard(text) {
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            
-            // Avoid scrolling to bottom
-            textArea.style.top = "0";
-            textArea.style.left = "0";
-            textArea.style.position = "fixed";
 
-            document.body.appendChild(textArea);
+            const textArea =
+                document.createElement(
+                    "textarea"
+                );
+
+
+            textArea.value =
+                text;
+
+
+            textArea.style.top =
+                "0";
+
+
+            textArea.style.left =
+                "0";
+
+
+            textArea.style.position =
+                "fixed";
+
+
+            document.body.appendChild(
+                textArea
+            );
+
+
             textArea.focus();
+
             textArea.select();
 
+
             try {
-                const successful = document.execCommand('copy');
-                if (successful) showToast();
-            } catch (err) {
-                console.error('Fallback: Oops, unable to copy', err);
+
+                const successful =
+                    document.execCommand(
+                        'copy'
+                    );
+
+
+                if (successful) {
+
+                    showToast();
+                }
+
             }
 
-            document.body.removeChild(textArea);
+            catch (err) {
+
+                console.error(
+                    'Não foi possível copiar:',
+                    err
+                );
+            }
+
+
+            document.body.removeChild(
+                textArea
+            );
         }
 
+
+        // ============================================================
+        // TOAST
+        // ============================================================
+
         function showToast() {
-            toast.classList.remove('opacity-0');
-            
-            // Original button text
-            const originalHTML = copyBtn.innerHTML;
-            
-            // Change button temporarily
-            copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Copiado!`;
-            copyBtn.classList.remove('bg-brand-600', 'hover:bg-brand-700');
-            copyBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+
+            toast.classList.remove(
+                'opacity-0'
+            );
+
+
+            const originalHTML =
+                copyBtn.innerHTML;
+
+
+            copyBtn.innerHTML = `
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+
+                Copiado!
+            `;
+
+
+            copyBtn.classList.remove(
+                'bg-brand-600',
+                'hover:bg-brand-700'
+            );
+
+
+            copyBtn.classList.add(
+                'bg-green-600',
+                'hover:bg-green-700'
+            );
+
 
             setTimeout(() => {
-                toast.classList.add('opacity-0');
-                copyBtn.innerHTML = originalHTML;
-                copyBtn.classList.add('bg-brand-600', 'hover:bg-brand-700');
-                copyBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
-                
-                // Re-attach elements variables if they were overwritten by innerHTML replace
-                // Actually, the span id='copyText' gets destroyed and recreated, 
-                // but our logic doesn't strictly depend on it after init, as we change the whole button HTML.
+
+                toast.classList.add(
+                    'opacity-0'
+                );
+
+
+                copyBtn.innerHTML =
+                    originalHTML;
+
+
+                copyBtn.classList.add(
+                    'bg-brand-600',
+                    'hover:bg-brand-700'
+                );
+
+
+                copyBtn.classList.remove(
+                    'bg-green-600',
+                    'hover:bg-green-700'
+                );
+
             }, 2000);
         }
 
-        // Initialize on load
-        window.addEventListener('DOMContentLoaded', init);
+
+        // ============================================================
+        // START
+        // ============================================================
+
+        window.addEventListener(
+            'DOMContentLoaded',
+            init
+        );
+
     </script>
+
 </body>
 </html>
