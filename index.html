@@ -1,278 +1,134 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cálculo de Transpose</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0d9488">
+<title>Cálculo de Transpose + Campo Harmônico — Offline</title>
+<style>
+  :root { color-scheme: light; --teal:#0d9488; --teal-dark:#0f766e; --ink:#1e293b; --muted:#64748b; --border:#e2e8f0; }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100dvh; display:flex; align-items:center; justify-content:center; padding:20px; background:#f8fafc; color:#334155; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+  button,select { font:inherit; }
+  button { cursor:pointer; }
+  button:focus-visible,select:focus-visible { outline:3px solid #5eead4; outline-offset:2px; }
+  .app { width:min(100%,600px); background:white; border:1px solid #f1f5f9; border-radius:18px; overflow:hidden; box-shadow:0 20px 35px -18px #0f172a44,0 9px 15px -12px #0f172a33; }
+  header { background:var(--teal); color:white; text-align:center; padding:26px 20px; }
+  header h1 { margin:0; font-size:26px; letter-spacing:-.5px; font-weight:750; }
+  header p { margin:7px 0 0; font-size:14px; color:#ccfbf1; }
+  main { padding:26px 24px 24px; }
+  .selectors { display:flex; align-items:flex-end; gap:12px; }
+  .field { min-width:0; flex:1; }
+  label { display:block; margin-bottom:9px; font-size:14px; font-weight:700; color:#475569; }
+  select { display:block; width:100%; padding:13px 32px 13px 12px; min-height:51px; border:1px solid #cbd5e1; border-radius:12px; background:#f8fafc; color:#1e293b; font-size:16px; font-weight:600; appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364758b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 9px center; background-size:17px; }
+  .swap { flex-shrink:0; width:43px; height:43px; display:grid; place-items:center; border:0; border-radius:50%; background:#f1f5f9; color:#475569; margin-bottom:4px; transition:background .15s; }
+  .swap:hover { background:#e2e8f0; }
+  .swap svg { width:20px; height:20px; transition:transform .2s; }
+  #resultCard { margin-top:32px; background:#f8fafc; border:2px dashed #e2e8f0; border-radius:16px; text-align:center; padding:28px 16px; transition:background .2s,border .2s,transform .2s,opacity .2s; }
+  #resultCard.bg-brand-50 { background:#f0fdfa; border:2px solid #99f6e4; }
+  #resultCard.bg-amber-50 { background:#fffbeb; border:2px solid #fde68a; }
+  #resultCard.bg-slate-50:not(.border-dashed) { background:#f8fafc; border:2px solid #cbd5e1; }
+  #resultCard.border-dashed { border-style:dashed; }
+  #resultCard.scale-95 { transform:scale(.95); }
+  #resultCard.opacity-80 { opacity:.8; }
+  .result-label { margin:0 0 5px; text-transform:uppercase; letter-spacing:2.2px; color:#94a3b8; font-size:12px; font-weight:800; }
+  #transposeValue { font-size:64px; font-weight:850; letter-spacing:-3px; line-height:1.2; font-variant-numeric:tabular-nums; color:#1e293b; }
+  #transposeValue.text-brand-600 { color:#0d9488; }
+  #transposeValue.text-amber-600 { color:#d97706; }
+  #instructionText { font-size:14px; color:#64748b; font-weight:500; margin:17px 0 0; }
+  #instructionValue { color:#334155; font-weight:800; }
+  .hidden { display:none!important; }
+  .actions { display:flex; gap:12px; margin-top:24px; }
+  .actions button { flex:1; display:flex; justify-content:center; align-items:center; gap:9px; min-height:49px; padding:10px 12px; border-radius:11px; font-weight:700; font-size:14px; transition:background .15s; }
+  .actions svg { width:18px; height:18px; flex-shrink:0; }
+  #clearBtn { border:1px solid #e2e8f0; background:white; color:#475569; }
+  #clearBtn:hover { background:#f8fafc; }
+  #copyBtn { border:1px solid transparent; background:#0d9488; color:white; }
+  #copyBtn:hover:not(:disabled) { background:#0f766e; }
+  #copyBtn.bg-green-600 { background:#16a34a; }
+  #copyBtn:disabled { opacity:.5; cursor:not-allowed; }
+  #toast { position:fixed; z-index:5; left:50%; bottom:20px; transform:translateX(-50%); background:#1e293b; color:white; font-size:14px; font-weight:600; border-radius:9px; padding:11px 16px; white-space:nowrap; box-shadow:0 5px 20px #0002; transition:opacity .25s; }
+  #toast.opacity-0 { opacity:0; pointer-events:none; }
+  @media(max-width:420px) { body{padding:12px;} main{padding:22px 16px;} header{padding:24px 14px;} header h1{font-size:23px;} .selectors{gap:8px;} select{font-size:14px; padding-left:9px;} .swap{width:36px;height:36px;} .actions{gap:8px;} .actions button{font-size:12px;gap:6px;padding:9px;} }
 
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f0fdfa',
-                            100: '#ccfbf1',
-                            200: '#99f6e4',
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                            700: '#0f766e',
-                            900: '#134e4a',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        body {
-            background-color: #f8fafc;
-            color: #334155;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        select {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1em;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-    </style>
+  .harmony { margin-top:28px; padding-top:23px; border-top:1px solid #e2e8f0; }
+  .harmony h2 { font-size:21px; line-height:1.25; letter-spacing:-.35px; margin:0 0 7px; color:#0f172a; }
+  .harmony .subtitle { font-size:13px; line-height:1.55; color:#64748b; margin:0 0 17px; }
+  .mini-tag { display:inline-block; font-size:11px; font-weight:800; color:#0f766e; background:#ccfbf1; padding:5px 9px; border-radius:999px; margin-bottom:10px; }
+  .harmony-summary { background:#f0fdfa; border:1px solid #99f6e4; border-radius:13px; padding:14px 15px; margin-bottom:16px; }
+  .harmony-summary strong { color:#115e59; }
+  .harmony-summary p { margin:5px 0 0; color:#475569; font-size:13px; line-height:1.55; }
+  .notice { border-radius:11px; background:#fffbeb; border:1px solid #fde68a; padding:12px; margin-bottom:15px; color:#92400e; font-size:13px; line-height:1.5; }
+  .section-kicker { margin:22px 0 10px; font-weight:800; color:#334155; font-size:14px; }
+  .degree-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+  .degree { border-radius:12px; background:#f8fafc; border:1px solid #e2e8f0; min-width:0; padding:12px 5px 10px; text-align:center; }
+  .degree .roman { color:#64748b; font-size:12px; font-weight:750; margin-bottom:6px; }
+  .degree .chord { color:#0f172a; font-size:21px; line-height:1.25; font-weight:800; overflow-wrap:anywhere; }
+  .degree .quality { color:#64748b; font-size:10px; margin-top:5px; }
+  .degree.tonic { background:#f0fdfa; border-color:#99f6e4; }
+  .degree.tonic .chord { color:#0f766e; }
+  .progressions { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .progression { background:white; border:1px solid #e2e8f0; border-radius:12px; padding:12px; min-width:0; }
+  .progression .name { color:#475569; font-size:12px; font-weight:800; margin-bottom:7px; }
+  .progression .nums { color:#64748b; font-size:12px; margin-bottom:9px; }
+  .progression .chords { color:#0f766e; font-size:17px; font-weight:850; line-height:1.55; overflow-wrap:anywhere; }
+  .progression .chords span { color:#94a3b8; font-weight:500; }
+  .mapping-note { font-size:12px; color:#64748b; line-height:1.55; margin:-3px 0 10px; }
+  .mapping-table { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0; border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; }
+  .mapping-table > div { padding:10px 8px; text-align:center; background:#fff; border-bottom:1px solid #e2e8f0; font-weight:700; font-size:15px; }
+  .mapping-table > div:nth-child(6n+4), .mapping-table > div:nth-child(6n+5), .mapping-table > div:nth-child(6n+6) { background:#f8fafc; }
+  .mapping-table > div:nth-last-child(-n+3) { border-bottom:0; }
+  .mapping-table .mapping-head { background:#eafaf6 !important; color:#0f766e; font-size:12px; }
+  .mapping-table .mapping-play { color:#0f766e; }
+  .mapping-table .mapping-grade { color:#64748b; font-size:13px; }
+  .tiny-tip { border-left:3px solid #14b8a6; padding:8px 11px; background:#f8fafc; margin:16px 0 0; font-size:12px; line-height:1.65; color:#475569; }
+  .placeholder { background:#f8fafc; border:1px dashed #cbd5e1; border-radius:12px; text-align:center; padding:20px 15px; color:#64748b; font-size:13px; line-height:1.5; }
+  .footnote { margin:22px 0 0; font-size:11px; color:#94a3b8; text-align:center; }
+  @media(max-width:420px){ .degree-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;} .degree .chord{font-size:18px;} .degree{padding:10px 3px;} .progressions{grid-template-columns:1fr;} }
+</style>
 </head>
+<body>
+<div class="app">
+<header><h1>Cálculo de Transpose</h1><p>Rápido e simples para músicos</p></header>
+<main>
+<div class="selectors">
+<div class="field"><label for="bandKey">Tom da Banda</label><select id="bandKey"><option value="" disabled selected>Selecione</option></select></div>
+<button id="swapBtn" class="swap" type="button" title="Inverter tons" aria-label="Inverter tons"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg></button>
+<div class="field"><label for="playKey">Vou tocar em</label><select id="playKey"><option value="" disabled selected>Selecione</option></select></div>
+</div>
+<div id="resultCard" class="bg-slate-50 border-dashed scale-100"><p class="result-label">Transpose</p><div id="transposeValue">-</div><p id="instructionText" class="hidden">No teclado coloque o transpose em <strong id="instructionValue"></strong>.</p></div>
+<div class="actions">
+<button id="clearBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>Limpar</button>
+<button id="copyBtn" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span id="copyText">Copiar resultado</span></button>
+</div>
 
-<body class="min-h-screen flex items-center justify-center p-4">
-
-    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
-
-        <!-- Header -->
-        <div class="bg-brand-600 text-white p-6 text-center">
-            <h1 class="text-2xl font-bold tracking-tight">
-                Cálculo de Transpose
-            </h1>
-
-            <p class="text-brand-100 mt-1 text-sm">
-                Rápido e simples para músicos
-            </p>
-        </div>
-
-        <!-- Main Content -->
-        <div class="p-6 space-y-8">
-
-            <!-- Selectors -->
-            <div class="flex flex-col sm:flex-row gap-4 items-end relative">
-
-                <!-- Tom da Banda -->
-                <div class="flex-1 w-full">
-
-                    <label
-                        for="bandKey"
-                        class="block text-sm font-semibold text-slate-600 mb-2"
-                    >
-                        Tom da Banda
-                    </label>
-
-                    <select
-                        id="bandKey"
-                        class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all font-medium text-lg"
-                    >
-                        <option value="" disabled selected>
-                            Selecione
-                        </option>
-                    </select>
-
-                </div>
-
-                <!-- Swap Button -->
-                <button
-                    id="swapBtn"
-                    class="flex-none bg-slate-100 hover:bg-slate-200 text-slate-600 p-3 rounded-full transition-colors self-center sm:self-end sm:mb-1 group"
-                    title="Inverter tons"
-                    aria-label="Inverter tons"
-                >
-
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="transform transition-transform group-hover:rotate-180"
-                    >
-                        <polyline points="16 3 21 3 21 8"></polyline>
-                        <line x1="4" y1="20" x2="21" y2="3"></line>
-                        <polyline points="21 16 21 21 16 21"></polyline>
-                        <line x1="15" y1="15" x2="21" y2="21"></line>
-                        <line x1="4" y1="4" x2="9" y2="9"></line>
-                    </svg>
-
-                </button>
-
-                <!-- Vou tocar em -->
-                <div class="flex-1 w-full">
-
-                    <label
-                        for="playKey"
-                        class="block text-sm font-semibold text-slate-600 mb-2"
-                    >
-                        Vou tocar em
-                    </label>
-
-                    <select
-                        id="playKey"
-                        class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all font-medium text-lg"
-                    >
-                        <option value="" disabled selected>
-                            Selecione
-                        </option>
-                    </select>
-
-                </div>
-
-            </div>
-
-            <!-- Result Card -->
-            <div
-                id="resultCard"
-                class="bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 p-8 text-center transition-all duration-300 transform scale-100"
-            >
-
-                <p class="text-sm font-bold text-slate-400 tracking-widest uppercase mb-2">
-                    Transpose
-                </p>
-
-                <div
-                    id="transposeValue"
-                    class="text-6xl font-black text-slate-800 tracking-tighter tabular-nums"
-                >
-                    -
-                </div>
-
-                <p
-                    id="instructionText"
-                    class="mt-4 text-slate-500 font-medium text-sm hidden"
-                >
-                    No teclado coloque o transpose em
-                    <span
-                        id="instructionValue"
-                        class="font-bold text-slate-700"
-                    ></span>.
-                </p>
-
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex gap-3">
-
-                <button
-                    id="clearBtn"
-                    class="flex-1 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2"
-                >
-
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <path d="M3 6h18"></path>
-                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                    </svg>
-
-                    Limpar
-
-                </button>
-
-                <button
-                    id="copyBtn"
-                    disabled
-                    class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <rect
-                            x="9"
-                            y="9"
-                            width="13"
-                            height="13"
-                            rx="2"
-                        ></rect>
-
-                        <path
-                            d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                        ></path>
-                    </svg>
-
-                    <span id="copyText">
-                        Copiar resultado
-                    </span>
-
-                </button>
-
-            </div>
-
-            <!-- Toast -->
-            <div
-                id="toast"
-                class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-lg shadow-lg text-sm font-medium transition-opacity duration-300 opacity-0 pointer-events-none"
-            >
-                Copiado com sucesso!
-            </div>
-
-        </div>
-
+<section class="harmony" aria-labelledby="harmonyTitle">
+  <span class="mini-tag">GUIA MUSICAL OFFLINE</span>
+  <h2 id="harmonyTitle">Campo harmônico e graus</h2>
+  <p class="subtitle">Sem cifra e sem internet? Consulte os acordes do seu tom e algumas progressões para se orientar durante o louvor.</p>
+  <div id="harmonyPlaceholder" class="placeholder">Selecione o tom da banda e o tom em que você vai tocar para ver os acordes disponíveis.</div>
+  <div id="harmonyContent" class="hidden" aria-live="polite">
+    <div class="harmony-summary">
+      <strong id="harmonyHeading"></strong>
+      <p id="harmonyExplanation"></p>
     </div>
+    <div id="modeWarning" class="notice hidden"></div>
+    <div class="section-kicker">Os 7 graus do seu tom</div>
+    <div class="degree-grid" id="degreesGrid"></div>
+    <div class="section-kicker">O que você aperta × o que a cantora ouve</div>
+    <p class="mapping-note">Cada linha é o mesmo grau musical. Siga os acordes da coluna “Suas mãos”; o transpose converte o som para a coluna “Banda”.</p>
+    <div id="mappingTable" class="mapping-table" aria-label="Correspondência dos acordes com o transpose"></div>
+    <div class="section-kicker">Possíveis sequências de acordes para suas mãos</div>
+    <div class="progressions" id="progressionsGrid"></div>
+    <div class="tiny-tip"><strong>Importante:</strong> essas são progressões comuns, não os acordes exatos de um louvor. A melodia e o baixo ajudam a identificar a sequência real. Músicas podem usar outros acordes, inversões e modulações.</div>
+  </div>
+  <p class="footnote">Funciona sem internet · Tons maiores e menores</p>
+</section>
 
-
-    <script>
+<div id="toast" class="opacity-0" role="status" aria-live="polite">Copiado com sucesso!</div>
+</main>
+</div>
+<script>
 
         /*
         ============================================================
@@ -673,6 +529,7 @@
             displayResult(
                 optimalTranspose
             );
+            updateHarmony(bandKey, playKey, optimalTranspose);
         }
 
 
@@ -835,6 +692,7 @@
 
 
             resetResultDisplay();
+            updateHarmony(null, null, 0);
         }
 
 
@@ -1036,7 +894,120 @@
             init
         );
 
-    </script>
 
+
+// ==========================================================
+// GUIA DE CAMPO HARMÔNICO — sem bibliotecas ou internet
+// ==========================================================
+const harmonyPlaceholder = document.getElementById('harmonyPlaceholder');
+const harmonyContent = document.getElementById('harmonyContent');
+const harmonyHeading = document.getElementById('harmonyHeading');
+const harmonyExplanation = document.getElementById('harmonyExplanation');
+const modeWarning = document.getElementById('modeWarning');
+const degreesGrid = document.getElementById('degreesGrid');
+const progressionsGrid = document.getElementById('progressionsGrid');
+const mappingTable = document.getElementById('mappingTable');
+
+// Escolhe grafias musicais legíveis (Db maior, C# menor etc.).
+const preferredTonic = {
+  Maior: ['C','Db','D','Eb','E','F','F#','G','Ab','A','Bb','B'],
+  Menor: ['C','C#','D','Eb','E','F','F#','G','G#','A','Bb','B']
+};
+const naturalPitches = { C:0, D:2, E:4, F:5, G:7, A:9, B:11 };
+const letters = ['C','D','E','F','G','A','B'];
+const majorSteps = [0,2,4,5,7,9,11];
+const minorSteps = [0,2,3,5,7,8,10];
+const majorQualities = ['','m','m','','','m','°'];
+const minorQualities = ['m','°','','m','m','',''];
+const majorRoman = ['I','ii','iii','IV','V','vi','vii°'];
+const minorRoman = ['i','ii°','III','iv','v','VI','VII'];
+
+function musicalScale(pitch, mode) {
+  const tonic = preferredTonic[mode][pitch];
+  const startLetter = letters.indexOf(tonic[0]);
+  const offsets = mode === 'Menor' ? minorSteps : majorSteps;
+  return offsets.map((offset, i) => {
+    const letter = letters[(startLetter + i) % 7];
+    const desired = (pitch + offset) % 12;
+    const natural = naturalPitches[letter];
+    let diff = (desired - natural + 12) % 12;
+    if (diff > 6) diff -= 12;
+    const accidental = diff === 0 ? '' : diff === 1 ? '#' : diff === -1 ? 'b' : diff === 2 ? '##' : diff === -2 ? 'bb' : '';
+    return letter + accidental;
+  });
+}
+
+const patterns = {
+  Maior: [
+    { title:'Muito usada', degrees:[0,4,5,3] },
+    { title:'Outra sequência comum', degrees:[0,3,4,0] },
+    { title:'Começando pelo relativo menor', degrees:[5,3,0,4] },
+    { title:'Movimento tradicional', degrees:[0,5,1,4] }
+  ],
+  Menor: [
+    { title:'Progressão em menor', degrees:[0,5,2,6] },
+    { title:'Menor com movimento suave', degrees:[0,3,5,6] },
+    { title:'Outra possibilidade', degrees:[0,6,5,6] },
+    { title:'Movimento tradicional', degrees:[0,3,6,2] }
+  ]
+};
+
+function updateHarmony(bandKey, playKey, transpose) {
+  if (!bandKey || !playKey) {
+    harmonyPlaceholder.classList.remove('hidden');
+    harmonyContent.classList.add('hidden');
+    return;
+  }
+  const mode = bandKey.mode; // Modalidade do louvor — não é alterada por transpose.
+  const scale = musicalScale(playKey.id, mode);
+  const bandScale = musicalScale(bandKey.id, mode);
+  const qualities = mode === 'Menor' ? minorQualities : majorQualities;
+  const numerals = mode === 'Menor' ? minorRoman : majorRoman;
+  const chords = scale.map((note,i) => note + qualities[i]);
+  const bandChords = bandScale.map((note,i) => note + qualities[i]);
+  const difference = transpose > 0 ? '+'+transpose : String(transpose);
+  const bandName = preferredTonic[mode][bandKey.id] + (mode === 'Menor' ? 'm' : '');
+  const playName = preferredTonic[mode][playKey.id] + (mode === 'Menor' ? 'm' : '');
+  harmonyHeading.textContent = 'Banda em '+bandName+' · Você toca em '+playName;
+  harmonyExplanation.textContent = 'Ajuste o transpose para '+difference+'. Toque fisicamente os acordes de '+playName+' abaixo; o teclado fará eles soarem no tom da banda ('+bandName+').';
+
+  if (bandKey.mode !== playKey.mode) {
+    modeWarning.classList.remove('hidden');
+    modeWarning.textContent = 'Atenção: você selecionou '+playKey.mode.toLowerCase()+' em “Vou tocar em”, mas o louvor está em '+mode.toLowerCase()+'. O transpose só muda a altura das notas, não transforma maior em menor. Por isso, a lista abaixo usa o modo do louvor. Para evitar confusão, selecione o mesmo modo nos dois campos.';
+  } else {
+    modeWarning.classList.add('hidden');
+  }
+
+  degreesGrid.replaceChildren();
+  chords.forEach((chord,i)=>{
+    const el=document.createElement('div');
+    el.className='degree'+(i===0?' tonic':'');
+    const roman=document.createElement('div'); roman.className='roman'; roman.textContent=numerals[i];
+    const name=document.createElement('div'); name.className='chord'; name.textContent=chord;
+    const quality=document.createElement('div'); quality.className='quality'; quality.textContent=qualities[i]==='m'?'menor':qualities[i]==='°'?'diminuto':'maior';
+    el.append(roman,name,quality); degreesGrid.appendChild(el);
+  });
+  mappingTable.replaceChildren();
+  const headingCells = ['Grau','Suas mãos','Banda'];
+  headingCells.forEach(label => { const cell=document.createElement('div'); cell.className='mapping-head'; cell.textContent=label; mappingTable.appendChild(cell); });
+  chords.forEach((chord,i) => {
+    [[numerals[i],'mapping-grade'],[chord,'mapping-play'],[bandChords[i],'mapping-band']].forEach(([value,cls]) => {
+      const cell=document.createElement('div'); cell.className=cls; cell.textContent=value; mappingTable.appendChild(cell);
+    });
+  });
+  progressionsGrid.replaceChildren();
+  patterns[mode].forEach(pattern=>{
+    const el=document.createElement('div'); el.className='progression';
+    const heading=document.createElement('div'); heading.className='name'; heading.textContent=pattern.title;
+    const nums=document.createElement('div'); nums.className='nums'; nums.textContent=pattern.degrees.map(i=>numerals[i]).join(' – ');
+    const chordList=document.createElement('div'); chordList.className='chords';
+    pattern.degrees.forEach((i,k)=>{if(k){const dash=document.createElement('span');dash.textContent=' – ';chordList.appendChild(dash);} const node=document.createElement('span');node.style.color='#0f766e';node.style.fontWeight='850';node.textContent=chords[i];chordList.appendChild(node);});
+    el.append(heading,nums,chordList);progressionsGrid.appendChild(el);
+  });
+  harmonyPlaceholder.classList.add('hidden');
+  harmonyContent.classList.remove('hidden');
+}
+
+    </script>
 </body>
 </html>
